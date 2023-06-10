@@ -51,7 +51,7 @@ export class AuthService {
   async refreshToken(refresh_token: string): Promise<any> {
     try {
       const verify = await this.jwtService.verifyAsync(refresh_token, {
-        secret: this.configService.get('SECRET'),
+        secret: this.configService.get('SECRET_REFRESH_TOKEN'),
       });
 
       const checkExistToken = await this.userRepository.findOneBy({
@@ -77,7 +77,7 @@ export class AuthService {
   private async generateToken(payload: { id: number; email: string }) {
     const access_token = await this.jwtService.signAsync(payload);
     const refresh_token = await this.jwtService.signAsync(payload, {
-      secret: this.configService.get('SECRET'),
+      secret: this.configService.get('SECRET_REFRESH_TOKEN'),
       expiresIn: this.configService.get('EXP_IN_REFRESH_TOKEN'),
     });
     await this.userRepository.update(
